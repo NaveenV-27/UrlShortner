@@ -10,6 +10,8 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        cyan: require('tailwindcss/colors').cyan,
+
       },
     },
   },
