@@ -30,41 +30,8 @@ export default function Home() {
   return (
     <>
 
-      {/* <main className="w-screen min-h-[90vh] flex flex-col">
-        <div className="w-screen flex-center gap-12 bg-gray-400">
-
-          <div className="text-3xl font-bold w-1/2 flex-center flex-col gap-4">
-          Try our best in the biz url shortner
-          <Link href="/shorten"><button className="ring-2 ring-white rounded-lg p-2 text-lg font-light font-serif focus:ring-4">Try Now</button></Link>
-          </div>
-          <Image className="w-1/2" src={logo} height={400} width={640} alt="Logo" />
-        </div>
-        {data && <div className="flex-center flex-col w-screen"><h3 className="font-serif text-left font-bold text-2xl">Checkout your previous shortend URLs</h3>
-          <table className='table-auto w-full rounded-md overflow-hidden my-2 border-collapse'>
-            
-            <thead className='w-screen'>
-              <tr className="mx-8 bg-cyan-500 flex-center rounded-lg">
-                <th className='py-2 w-[20%]'>SI no</th>
-                <th className='py-2 w-[50%]'>URL</th>
-                <th className='py-2 w-[30%]'>Short url</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              {data.map((item) => {
-                return <tr key={count} className="bg-cyan-300 h-8 my-1 flex-center mx-8 rounded-md">
-                  <td className="flex-center w-[20%]" >{count++}</td>
-                  <td className="flex-center w-[50%]"><Link href={item.url}>{item.url}</Link></td>
-                  <td className="flex-center w-[30%]"><Link href={item.shorturl}>{`${process.env.NEXT_PUBLIC_HOST}/${item.shorturl}`}</Link></td>
-                </tr>
-                
-              })}
-            </tbody>
-          </table>
-        </div>}
-      </main> */}
+    
 <main className="min-h-[90vh] flex flex-col">
-  {/* Hero Section */}
   <div className="overflow-x-hidden flex items-center justify-center gap-12 bg-cyan-50 p-8 shadow-md">
     <div className="text-3xl font-bold w-1/2 flex flex-col items-center gap-4 text-cyan-600">
       Try our best-in-the-biz URL shortener
@@ -83,7 +50,6 @@ export default function Home() {
     />
   </div>
 
-  {/* Previous URLs Section */}
   {data && (
     <div className="flex flex-col items-center w-screen mt-8">
       <h3 className="font-serif font-bold text-2xl text-cyan-700 mb-4">
