@@ -17,7 +17,6 @@ export default function Home() {
 
     let a = await fetch("http://localhost:3000/api/generate", requestOptions)
     setdata(await a.json())
-    console.log(data)
   }
 
 
