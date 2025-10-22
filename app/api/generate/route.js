@@ -4,8 +4,8 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db("bitlinks")
     const collection = db.collection("url")
-    const doc = await collection.find({}).toArray();
-    return Response.json(doc)
+    const docs = await collection.find({}).toArray();
+    return Response.json(docs)
 }
 
 export async function POST(request) {
@@ -29,4 +29,13 @@ export async function POST(request) {
         })
 
     return Response.json({success: true, error: false,message: "URL generated successfully"})
+}
+
+
+export async function DELETE(request) {
+    const body = await request.json()
+    const client = await clientPromise;
+    const db = client.db("bitlinks")
+    const collection = db.collection("url")
+    
 }
