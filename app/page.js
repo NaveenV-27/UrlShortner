@@ -24,7 +24,7 @@ export default function Home() {
     getData()
   }, [])
 
-  let count = 1;
+  // let count = 1;
 
   return (
     <>
@@ -68,12 +68,12 @@ export default function Home() {
               key={index}
               className={`${
                 index % 2 === 0 ? 'bg-cyan-100' : 'bg-cyan-200'
-              } text-cyan-700`}
+              } text-cyan-700 max-h-4`}
             >
               <td className="py-2 px-4">{index + 1}</td>
-              <td className="py-2 px-4">
+              <td className="py-2 px-4 overflow-hidden text-ellipsis">
                 <Link href={item.url}>
-                  <span className="text-cyan-600 underline">{item.url}</span>
+                  <span className="text-cyan-600 underline ">{item.url}</span>
                 </Link>
               </td>
               <td className="py-2 px-4">

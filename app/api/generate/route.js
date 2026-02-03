@@ -4,7 +4,7 @@ export async function GET() {
     const client = await clientPromise;
     const db = client.db("bitlinks")
     const collection = db.collection("url")
-    const docs = await collection.find({}).toArray();
+    const docs = await collection.find({}).limit(10).toArray();
     return Response.json(docs)
 }
 
@@ -32,10 +32,10 @@ export async function POST(request) {
 }
 
 
-export async function DELETE(request) {
-    const body = await request.json()
-    const client = await clientPromise;
-    const db = client.db("bitlinks")
-    const collection = db.collection("url")
+// export async function DELETE(request) {
+//     const body = await request.json()
+//     const client = await clientPromise;
+//     const db = client.db("bitlinks")
+//     const collection = db.collection("url")
     
-}
+// }

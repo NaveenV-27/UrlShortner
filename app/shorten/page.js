@@ -9,11 +9,13 @@ const page = () => {
   const generate = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    const parsedUrl = shorturl.replace(" ", "-").toLowerCase()
 
     const raw = JSON.stringify({
       "url": url,
-      "shorturl": shorturl
+      "shorturl": parsedUrl,
     });
+    console.log("Raw:", raw)
 
     const requestOptions = {
       method: "POST",
@@ -25,7 +27,7 @@ const page = () => {
     fetch("/api/generate", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        setgenerated(`${process.env.NEXT_PUBLIC_HOST}/${shorturl}`)
+        setgenerated(`${process.env.NEXT_PUBLIC_HOST}/${parsedUrl}`)
         seturl("")
         setshorturl("")
         console.log(result);
