@@ -9,15 +9,15 @@ export default function About() {
         {/* Content Section */}
         <div className="max-w-4xl bg-white rounded-lg shadow-md p-8">
           <p className="text-lg text-cyan-700 leading-7 mb-6">
-            Welcome to <span className="font-bold text-cyan-600">BitLinks</span>! We’re dedicated to providing the fastest, simplest, and most reliable URL shortening service. 
-            Whether you're a marketer, developer, or casual user, our platform helps you transform long URLs into short and shareable links.
+            Welcome to <span className="font-bold text-cyan-600">BitLinks</span>! We&apos;re dedicated to providing the fastest, simplest, and most reliable URL shortening service. 
+            Whether you&apos;re a marketer, developer, or casual user, our platform helps you transform long URLs into short and shareable links.
           </p>
           <p className="text-lg text-cyan-700 leading-7 mb-6">
-            At <span className="font-bold text-cyan-600">BitLinks</span>, we believe in accessibility and efficiency. That's why our tools are designed with user-friendliness in mind. 
+            At <span className="font-bold text-cyan-600">BitLinks</span>, we believe in accessibility and efficiency. That&apos;s why our tools are designed with user-friendliness in mind. 
             From analyzing link performance to customizing your URLs, we have you covered.
           </p>
           <p className="text-lg text-cyan-700 leading-7">
-            Join thousands of users who trust <span className="font-bold text-cyan-600">BitLinks</span> for their URL shortening needs. Let's make the web more concise, one link at a time.
+            Join thousands of users who trust <span className="font-bold text-cyan-600">BitLinks</span> for their URL shortening needs. Let&apos;s make the web more concise, one link at a time.
           </p>
         </div>
   
