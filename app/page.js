@@ -81,23 +81,6 @@ export default function Home() {
       )}
 
       <main className="min-h-[90vh] flex flex-col">
-        <div className="overflow-x-hidden flex items-center justify-center gap-12 bg-cyan-50 p-8 shadow-md">
-          <div className="text-3xl font-bold w-1/2 flex flex-col items-center gap-4 text-cyan-600">
-            Try our best-in-the-biz URL shortener
-            <Link href="/shorten">
-              <button className="ring-2 ring-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white transition-all rounded-lg p-2 text-lg font-light font-serif focus:ring-4 focus:ring-cyan-300">
-                Try Now
-              </button>
-            </Link>
-          </div>
-          <Image
-            className="w-1/2"
-            src={logo}
-            height={400}
-            width={640}
-            alt="Logo"
-          />
-        </div>
 
         {data && (
           <div className="flex flex-col items-center w-screen mt-8">
@@ -122,12 +105,12 @@ export default function Home() {
                   >
                     <td className="py-2 px-4">{index + 1}</td>
                     <td className="py-2 px-4 overflow-hidden text-ellipsis">
-                      <Link href={item.url}>
+                      <Link href={item.url} target="_blank">
                         <span className="text-cyan-600 underline ">{item.url}</span>
                       </Link>
                     </td>
                     <td className="py-2 pl-4">
-                      <Link href={item.shorturl}>
+                      <Link href={item.shorturl} target="_blank">
                         <span className="text-cyan-600 underline">{`${process.env.NEXT_PUBLIC_HOST}/${item.shorturl}`}</span>
                       </Link>
                     </td>
@@ -142,6 +125,24 @@ export default function Home() {
             </table>
           </div>
         )}
+
+        <div className="overflow-x-hidden flex items-center justify-center gap-12 bg-cyan-50 p-8 shadow-md">
+          <div className="text-3xl font-bold w-1/2 flex flex-col items-center gap-4 text-cyan-600">
+            Try our best-in-the-biz URL shortener
+            <Link href="/shorten">
+              <button className="ring-2 ring-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white transition-all rounded-lg p-2 text-lg font-light font-serif focus:ring-4 focus:ring-cyan-300">
+                Try Now
+              </button>
+            </Link>
+          </div>
+          <Image
+            className="w-1/2"
+            src={logo}
+            height={400}
+            width={640}
+            alt="Logo"
+          />
+        </div>
       </main>
 
 
