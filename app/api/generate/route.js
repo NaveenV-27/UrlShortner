@@ -32,10 +32,14 @@ export async function POST(request) {
 }
 
 
-// export async function DELETE(request) {
-//     const body = await request.json()
-//     const client = await clientPromise;
-//     const db = client.db("bitlinks")
-//     const collection = db.collection("url")
-    
-// }
+export async function DELETE(request) {
+    const body = await request.json()
+    const client = await clientPromise;
+    const db = client.db("bitlinks")
+    const collection = db.collection("url")
+    const result = await collection.deleteOne({ shorturl: body.shorturl })
+    if (result.deletedCount === 0) {
+        return Response.json({ success: false, error: true, message: "URL not found!" })
+    }
+    return Response.json({ success: true, error: false, message: "URL deleted successfully" })
+}

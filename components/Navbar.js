@@ -5,11 +5,10 @@ const Navbar = () => {
   return (
     <nav className="flex w-full items-center justify-between px-10 bg-cyan-600 h-16 text-white shadow-md">
   <div className="text-2xl font-bold font-serif text-white">
-    Bit<span className="text-red-300">Links</span>
+    <Link href="/">Bit<span className="text-red-300">Links</span></Link>
   </div>
   <ul className="flex gap-6 text-lg font-medium">
     <li className="hover:text-cyan-300 transition-colors">
-      <Link href="/">Home</Link>
     </li>
     <li className="hover:text-cyan-300 transition-colors">
       <Link href="/contact">Contact</Link>
