@@ -18,7 +18,7 @@ export default function Home() {
       redirect: "follow"
     };
 
-    let a = await fetch("http://localhost:3000/api/generate", requestOptions)
+    let a = await fetch("/api/generate", requestOptions)
     setdata(await a.json())
   }
 
@@ -43,7 +43,7 @@ export default function Home() {
       }),
     };
 
-    await fetch("http://localhost:3000/api/generate", requestOptions);
+    await fetch("/api/generate", requestOptions);
 
     console.log("Deleted URL:", data[id].shorturl);
     setDeleteConfirm({ show: false, index: null })
