@@ -1,10 +1,10 @@
-import { redirect } from "next/navigation"
+import { redirect,  } from "next/navigation"
 import clientPromise from "@/lib/mongodb"
 
 
 export default async function Page({ params }) {
     const url_param = (await params);
-    const shorturl = url_param.shorturl.replace("%20", "-").toLowerCase();
+    const shorturl = url_param.shorturl.replace("%20", "-");
     console.log("Url:", shorturl);
 
     const client = await clientPromise;
@@ -18,7 +18,12 @@ export default async function Page({ params }) {
         redirect(doc.url)
     }
     else{
-        redirect(`${process.env.NEXT_PUBLIC_HOST}/notfound`)
+        // redirect(`${process.env.NEXT_PUBLIC_HOST}/notfound`)
+        return (
+            <>
+                <h1>URL Not Found</h1>
+            </>
+        )
     }
 
   }

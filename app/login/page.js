@@ -6,6 +6,8 @@ import { useState } from "react";
 
 export default function Login() {
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -18,10 +20,33 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Just redirect to home page
-    router.push("/");
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Success! Redirect to home page
+        router.push("/");
+        router.refresh(); // Forces Next.js to re-check server components for auth status
+      } else {
+        // Show "Invalid email or password"
+        setError(result.error || "Something went wrong");
+      }
+    } catch (err) {
+      setError("Network error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,6 +56,13 @@ export default function Login() {
           <h1 className="text-3xl font-bold text-cyan-600 font-serif">Welcome Back</h1>
           <p className="text-gray-500 mt-2">Sign in to your BitLinks account</p>
         </div>
+
+        {/* Display Error Message if it exists */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 text-red-500 text-sm rounded-lg border border-red-100 text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -77,9 +109,10 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-semibold hover:bg-cyan-700 transition-all focus:ring-4 focus:ring-cyan-300"
+            disabled={loading}
+            className="w-full bg-cyan-600 text-white py-3 rounded-lg font-semibold hover:bg-cyan-700 transition-all focus:ring-4 focus:ring-cyan-300 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
@@ -100,7 +133,7 @@ export default function Login() {
 
         <div className="mt-6 space-y-3">
           <button className="w-full flex items-center justify-center gap-3 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all text-gray-600">
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>

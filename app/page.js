@@ -1,151 +1,141 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import logo from "@/public/logo.jpg";
-import del from "@/public/delete.png";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-
-  const [data, setdata] = useState([])
-  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, index: null })
+  const [data, setdata] = useState([]);
+  const [deleteConfirm, setDeleteConfirm] = useState({ show: false, index: null });
+  const [copiedIndex, setCopiedIndex] = useState(null);
 
   const getData = async () => {
-
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow"
-    };
-
-    let a = await fetch("/api/generate", requestOptions)
-    setdata(await a.json())
-  }
-
+    try {
+      const a = await fetch("/api/urls");
+      const result = await a.json();
+      setdata(Array.isArray(result) ? result : []);
+    } catch (err) {
+      console.error("Failed to fetch data", err);
+    }
+  };
 
   useEffect(() => {
-    getData()
+    getData();
   }, []);
 
-  const handleDeleteClick = (index) => {
-    setDeleteConfirm({ show: true, index })
-  }
+  const handleCopy = (url, index) => {
+    const fullUrl = `${process.env.NEXT_PUBLIC_HOST}/${url}`;
+    navigator.clipboard.writeText(fullUrl);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
 
   const handleDeleteConfirm = async () => {
-    const id = deleteConfirm.index
-    const requestOptions = {
+    const item = data[deleteConfirm.index];
+    await fetch("/api/generate", {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        shorturl: data[id].shorturl,
-      }),
-    };
-
-    await fetch("/api/generate", requestOptions);
-
-    console.log("Deleted URL:", data[id].shorturl);
-    setDeleteConfirm({ show: false, index: null })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ shorturl: item.shorturl }),
+    });
+    setDeleteConfirm({ show: false, index: null });
     getData();
   };
 
-  const handleDeleteCancel = () => {
-    setDeleteConfirm({ show: false, index: null })
-  }
-
   return (
-    <>
-      {/* Confirmation Dialog */}
+    <main className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden">
+      {/* Delete Modal */}
       {deleteConfirm.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-4">
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Confirm Delete</h3>
-            <p className="text-gray-600 mb-6">Are you sure you want to delete this shortened URL? This action cannot be undone.</p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={handleDeleteCancel}
-                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteConfirm}
-                className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all"
-              >
-                Delete
-              </button>
+        <div className="fixed inset-0 bg-cyan-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl max-w-sm w-full mx-auto">
+            <h3 className="text-xl font-bold text-gray-900">Delete Link?</h3>
+            <p className="text-gray-500 mt-2">This action cannot be undone.</p>
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setDeleteConfirm({ show: false, index: null })} className="flex-1 px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-xl transition-all">Cancel</button>
+              <button onClick={handleDeleteConfirm} className="flex-1 px-4 py-2 bg-red-500 text-white font-medium hover:bg-red-600 rounded-xl transition-all">Delete</button>
             </div>
           </div>
         </div>
       )}
 
-      <main className="min-h-[90vh] flex flex-col">
-
-        {data && (
-          <div className="flex flex-col items-center w-screen mt-8">
-            <h3 className="font-serif font-bold text-2xl text-cyan-700 mb-4">
-              Checkout your previous shortened URLs
-            </h3>
-            <table className="table-auto w-11/12 rounded-md overflow-hidden my-4 border-collapse shadow-lg max-w-screen-xl">
-              <thead className="bg-cyan-500 text-white">
-                <tr>
-                  <th className="py-2 w-[20%] text-left px-4">SI no</th>
-                  <th className="py-2 w-[40%] text-left px-4">URL</th>
-                  <th className="py-2 w-[30%] text-left px-4">Short URL</th>
-                  <th className="py-2 w-[10%] text-left px-4"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((item, index) => (
-                  <tr
-                    key={index}
-                    className={`${index % 2 === 0 ? 'bg-cyan-100' : 'bg-cyan-200'
-                      } text-cyan-700 max-h-4`}
-                  >
-                    <td className="py-2 px-4">{index + 1}</td>
-                    <td className="py-2 px-4 overflow-hidden text-ellipsis">
-                      <Link href={item.url} target="_blank">
-                        <span className="text-cyan-600 underline ">{item.url}</span>
-                      </Link>
-                    </td>
-                    <td className="py-2 pl-4">
-                      <Link href={item.shorturl} target="_blank">
-                        <span className="text-cyan-600 underline">{`${process.env.NEXT_PUBLIC_HOST}/${item.shorturl}`}</span>
-                      </Link>
-                    </td>
-                    <td className="py-2 px-4">
-                      <button className="flex items-center justify-center hover:bg-red-100 p-2 rounded-lg" onClick={() => handleDeleteClick(index)}>
-                        <Image height={20} width={20} src={del} alt="Delete" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <div className="overflow-x-hidden flex items-center justify-center gap-12 bg-cyan-50 p-8 shadow-md">
-          <div className="text-3xl font-bold w-1/2 flex flex-col items-center gap-4 text-cyan-600">
-            Try our best-in-the-biz URL shortener
+      {/* Hero Section - Wrapped and Centered */}
+      <section className="bg-white border-b border-cyan-100 py-12 md:py-20 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="flex-1 text-center md:text-left max-w-xl">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+              Shorten links. <span className="text-cyan-600">Share faster.</span>
+            </h1>
+            <p className="text-lg text-slate-500 mt-4 mb-8">
+              The professional way to manage your links with custom aliases and secure tracking.
+            </p>
             <Link href="/shorten">
-              <button className="ring-2 ring-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white transition-all rounded-lg p-2 text-lg font-light font-serif focus:ring-4 focus:ring-cyan-300">
-                Try Now
+              <button className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-cyan-200 transition-all hover:-translate-y-1">
+                Create New Link
               </button>
             </Link>
           </div>
-          <Image
-            className="w-1/2"
-            src={logo}
-            height={400}
-            width={640}
-            alt="Logo"
-          />
+          <div className="hidden md:block flex-1 relative w-full max-w-sm aspect-square">
+             <Image src={logo} alt="Illustration" fill className="object-contain" priority />
+          </div>
         </div>
-      </main>
+      </section>
 
+      {/* Links List - Strictly Centered Container */}
+      <section className="max-w-4xl mx-auto px-6 mt-12">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-slate-800">Your Dashboard</h2>
+          <span className="bg-cyan-100 text-cyan-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
+            {data.length} Links
+          </span>
+        </div>
 
-    </>
+        {data.length > 0 ? (
+          <div className="space-y-4">
+            {data.map((item, index) => (
+              <div key={index} className="bg-white border border-slate-200 p-6 rounded-2xl hover:border-cyan-300 hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                
+                {/* Content Side: Text wrapping handled here */}
+                <div className="min-w-0 flex-1">
+                  <span className="text-[10px] font-black text-cyan-500 uppercase tracking-widest block mb-1">Destination</span>
+                  <p className="text-slate-500 text-sm break-all line-clamp-1 mb-3 pr-4">{item.url}</p>
+                  
+                  <Link href={`/${item.shorturl}`} target="_blank" className="text-lg font-bold text-cyan-600 hover:text-cyan-700 break-all leading-tight">
+                    {process.env.NEXT_PUBLIC_HOST}/{item.shorturl}
+                  </Link>
+                </div>
+
+                {/* Actions Side: Fixed width buttons */}
+                <div className="flex items-center gap-3 pt-4 sm:pt-0 border-t sm:border-t-0 sm:border-l border-slate-100 sm:pl-6">
+                  <button 
+                    onClick={() => handleCopy(item.shorturl, index)}
+                    className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-sm font-bold transition-all min-w-[90px] ${
+                      copiedIndex === index 
+                      ? 'bg-green-500 text-white' 
+                      : 'bg-cyan-50 text-cyan-600 hover:bg-cyan-600 hover:text-white'
+                    }`}
+                  >
+                    {copiedIndex === index ? "Copied!" : "Copy"}
+                  </button>
+                  
+                  <button 
+                    onClick={() => setDeleteConfirm({ show: true, index })}
+                    className="p-2.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                    title="Delete link"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-slate-200">
+            <p className="text-slate-400 font-medium">Your link library is empty.</p>
+          </div>
+        )}
+      </section>
+    </main>
   );
 }
